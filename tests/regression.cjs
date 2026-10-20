@@ -9,7 +9,7 @@ const handlers={},app={innerHTML:'',querySelector(){return null;},addEventListen
 const doc={querySelector(s){return s==='#app'?app:s==='#form-error'?error:notice},addEventListener(){}};
 new Function('CleanCore','document','window','localStorage','setInterval','crypto','FormData','confirm','alert',source)(
 core,doc,{addEventListener(){},scrollTo(){}},{getItem(){return saved},setItem(k,v){if(fail)throw Error('quota');saved=v}},()=>0,{randomUUID(){return 'id-'+(++id)}},function(form){return Object.entries(form.values)},()=>confirmed,()=>{});
-return {app,error,notice,data(){return saved?JSON.parse(saved):null},fail(v){fail=v},confirm(v){confirmed=v},click(action,task){handlers.click({target:{closest(){return {dataset:task?{task}:{action}}}}})},submit(form,values){handlers.submit({preventDefault(){},target:{id:form,values,reportValidity(){return true}}})}};
+return {app,error,notice,submitClick(){handlers.click({target:{closest(){return {type:'submit',dataset:{}}}}})},data(){return saved?JSON.parse(saved):null},fail(v){fail=v},confirm(v){confirmed=v},click(action,task){handlers.click({target:{closest(){return {dataset:task?{task}:{action}}}}})},submit(form,values){handlers.submit({preventDefault(){},target:{id:form,values,reportValidity(){return true}}})}};
 }
 const fields={name:'Køkken',group:'regular',interval:'7',estimate:'12',items:'Vask\nBord'};
 assert.equal(core.taskFields(fields).items.length,2);
@@ -21,7 +21,7 @@ assert.equal(core.best([{duration:null},{duration:5000}]),5000);
 assert.equal(core.latest([{at:200},{at:100}]).at,200);
 const x=boot(appSource,core,null);
 assert.ok(x.app.innerHTML.includes('Ingen faste opgaver'));
-x.click('new');x.submit('task-form',{...fields,lastDate:'2025-01-01'});
+x.click('new');const formMarker=x.app.innerHTML+'<!--form-draft-->';x.app.innerHTML=formMarker;x.submitClick();assert.equal(x.app.innerHTML,formMarker);x.submit('task-form',{...fields,lastDate:'2025-01-01'});
 assert.equal(x.data().tasks.length,1);
 const id=x.data().tasks[0].id;
 x.click('edit');x.submit('task-form',{...fields,name:'Nyt navn',group:'rare'});
