@@ -1,34 +1,28 @@
 # CLEAN
-Dansk, mobilorienteret rengøringsapp. Fase 2: et første afprøveligt kerneforløb.
+Dansk rengøringsapp til telefonen. Statisk HTML, CSS og JavaScript uden eksterne afhængigheder.
 
-## Implementeret
-- Faste opgaver og udfoldelige sjældne opgaver.
-- Opgavedetaljer med synlig huskeliste uden afkrydsning.
-- Tidsstempelbaseret timer med pause, fortsæt og afslut.
-- Lokal lagring af aktiv timer og gennemførelser.
-- Resultat, rekord, næste dato og fortryd afslutning.
-- Eksempelopgaver uden opdigtede gennemførelser.
+## Åbn appen
+https://prinshen.github.io/CLEAN/
 
-## Kørsel
-Statiske filer uden build-trin eller pakker. Servér repositoryets rod via en webserver, fx GitHub Pages. Appen bruger relative filstier, så den kan køre under /CLEAN/.
-GitHub Pages er ikke aktiveret af denne commit.
+## Funktioner
+- Egne faste og sjældne opgaver med interval, tidsestimat og huskeliste.
+- Opret via “Ny opgave”; rediger/slet fra opgavedetaljer.
+- Tid siden seneste rengøring: grå inden interval, gul ved interval og dagen efter, rød fra interval + 2.
+- Timer med pause, genoptagelse, resultat og fortryd.
+- Manuel registrering med dato; påvirker ikke personlig rekord.
+- Historik sorteret efter udførelsesdato, lokal lagring og enkle indstillinger.
 
 ## Data
-Data gemmes i browserens localStorage under clean.phase2.v1. De sendes ikke til GitHub. Undgå at rydde webstedsdata. Eksport/import kommer i fase 4.
-Fase 2 har faste eksempelopgaver. Opret/rediger/slet og registrering uden timer kommer i fase 3. Manifest, offline-cache og endelig hjemmeskærmsopsætning hører til fase 4.
+Den eksisterende lagernøgle clean.phase2.v1 bevares, så opdateringen ikke nulstiller brugerdata. Nye installationer starter uden eksempeldata. Tidligere gemte opgaver kan redigeres eller slettes individuelt.
+Data ligger kun i browseren, ikke i GitHub. Eksport/import, nulstilling og offline-PWA hører til fase 4 og er endnu ikke implementeret.
 
-## Validering
-JavaScript syntakskontrolleret. Otte logikkontroller bestået: aktiv tid, pause, genoptagelse, serialisering/genåbning, rekorder og kalenderbaserede intervaller.
-Browserlayout og fysisk iPhone er endnu ikke afprøvet, fordi udviklingsmiljøet var utilgængeligt.
+## Kontrol
+Kør fra repositoryets rod:
+```sh
+node tests/regression.cjs
+```
+Regressionstesten kontrollerer datoer, opgavestyring, manuel historik, fortryd, timersikkerhed og lagringsfejl i en simuleret DOM. Fysisk iPhone og visuelt layout er ikke automatisk testet.
 
-## Manuel afprøvning
-1. Åbn en opgave, start og kontrollér den synlige huskeliste.
-2. Pause i et minut: tiden må ikke stige. Fortsæt.
-3. Lås telefonen og genåbn: aktiv tid skal inkludere perioden; pauset tid må ikke.
-4. Genindlæs under aktiv og pauset timer.
-5. Afslut: kontrollér historik, rekord og næste dato.
-6. Fortryd afslutning: registreringen fjernes, timeren genåbner pauset.
-7. Afbryd: der må ikke blive gemt en gennemførelse.
-8. Fold sjældne opgaver ud og ind.
+Manuel kontrol: opret en opgave, rediger den, registrer en tidligere dato, start/pause/genåbn timer, afslut/fortryd og slet med bekræftelse. Kontrollér at appskift ikke fjerner indtastning i formularer.
 
 Se [projektgrundlaget](docs/PROJEKT.md).

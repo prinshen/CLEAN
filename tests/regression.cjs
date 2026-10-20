@@ -1,0 +1,46 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const coreSource = fs.readFileSync('core.js','utf8');
+const appSource = fs.readFileSync('app.js','utf8');
+const core = new Function(coreSource + ';return globalThis.CleanCore;')();
+function boot(source,core,initial){
+let saved=initial?JSON.stringify(initial):null,fail=false,confirmed=true,id=0;
+const handlers={},app={innerHTML:'',querySelector(){return null;},addEventListener(type,fn){handlers[type]=fn;}},error={textContent:''},notice={textContent:''};
+const doc={querySelector(s){return s==='#app'?app:s==='#form-error'?error:notice},addEventListener(){}};
+new Function('CleanCore','document','window','localStorage','setInterval','crypto','FormData','confirm','alert',source)(
+core,doc,{addEventListener(){},scrollTo(){}},{getItem(){return saved},setItem(k,v){if(fail)throw Error('quota');saved=v}},()=>0,{randomUUID(){return 'id-'+(++id)}},function(form){return Object.entries(form.values)},()=>confirmed,()=>{});
+return {app,error,notice,data(){return saved?JSON.parse(saved):null},fail(v){fail=v},confirm(v){confirmed=v},click(action,task){handlers.click({target:{closest(){return {dataset:task?{task}:{action}}}}})},submit(form,values){handlers.submit({preventDefault(){},target:{id:form,values,reportValidity(){return true}}})}};
+}
+const fields={name:'Køkken',group:'regular',interval:'7',estimate:'12',items:'Vask\nBord'};
+assert.equal(core.taskFields(fields).items.length,2);
+assert.throws(()=>core.taskFields({...fields,interval:'0'}));
+assert.throws(()=>core.taskFields({...fields,name:' '}));
+assert.throws(()=>core.parseDate('2026-02-30',new Date(2026,9,20).getTime()));
+assert.throws(()=>core.parseDate('2099-01-01',new Date(2026,9,20).getTime()));
+assert.equal(core.best([{duration:null},{duration:5000}]),5000);
+assert.equal(core.latest([{at:200},{at:100}]).at,200);
+const x=boot(appSource,core,null);
+assert.ok(x.app.innerHTML.includes('Ingen faste opgaver'));
+x.click('new');x.submit('task-form',{...fields,lastDate:'2025-01-01'});
+assert.equal(x.data().tasks.length,1);
+const id=x.data().tasks[0].id;
+x.click('edit');x.submit('task-form',{...fields,name:'Nyt navn',group:'rare'});
+assert.equal(x.data().tasks[0].history.length,1);
+assert.equal(x.data().tasks[0].group,'rare');
+x.click('manual');x.submit('manual-form',{completedDate:'2024-12-01'});
+assert.equal(core.latest(x.data().tasks[0].history).at,core.parseDate('2025-01-01'));
+assert.ok(x.app.innerHTML.includes('uden timer'));
+x.click('undo');assert.equal(x.data().tasks[0].history.length,1);
+assert.equal(x.data().session,null);
+x.click('start');x.click('home');x.click(null,id);x.click('edit');
+assert.ok(!x.app.innerHTML.includes('id="task-form"'));
+x.click('timer');x.click('finish');x.click('undo');
+assert.equal(x.data().session.startedAt,null);
+x.click('cancel');x.click(null,id);x.click('edit');
+x.fail(true);x.submit('task-form',{...fields,name:'Must not save'});
+assert.equal(x.data().tasks[0].name,'Nyt navn');
+x.fail(false);x.confirm(false);x.click('delete');
+assert.equal(x.data().tasks.length,1);
+x.confirm(true);x.click('delete');assert.equal(x.data().tasks.length,0);
+assert.ok(boot(appSource,core,x.data()).app.innerHTML.includes('Ingen faste opgaver'));
+console.log('CLEAN regression checks passed');

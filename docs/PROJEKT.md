@@ -21,7 +21,7 @@ Personlig rengøringsapp til iPhone via GitHub-hostet webapp/PWA. Dansk brugerfl
 
 ## Design — godkendt
 Grå og mørkeblå, moderne og minimalistisk uden at være koldt. Varm lys grå baggrund, dyb mørkeblå tekst og knapper, fine skillelinjer, luftige opgavelister, ingen tunge skygger eller permanent bundmenu.
-Overblik → opgavedetaljer → dedikeret timer → resultat. Opgavestyring tilføjes i fase 3. Historik foldes ud på detaljeskærmen.
+Overblik → opgavedetaljer → dedikeret timer → resultat. Opgaver oprettes fra oversigten og redigeres fra detaljeskærmen. Historik foldes ud på detaljeskærmen.
 
 ## Ikke i første version
 AI, login, backend, synkronisering, notifikationer, XP, levels, streaks, statistikdashboard, automatiske rengøringssessioner eller særskilte intervaller for underopgaver.
@@ -31,11 +31,11 @@ AI, login, backend, synkronisering, notifikationer, XP, levels, streaks, statist
 |---|---|---|
 | 0 | Scope og projektgrundlag | Afsluttet |
 | 1 | Design og skærmadfærd | Godkendt |
-| 2 | Eksempelopgaver, overblik, detaljer, timer, resultat og lokal lagring | Implementeret; browser- og iPhone-afprøvning mangler |
-| 3 | Egne opgaver, fuld historikadfærd og registrering uden timer | Ikke startet |
+| 2 | Eksempelopgaver, overblik, detaljer, timer, resultat og lokal lagring | Implementeret; Jacob har bekræftet, at siden åbner. Fuld iPhone-test udestår |
+| 3 | Egne opgaver, fuld historikadfærd og registrering uden timer | Implementeret; logiktest bestået, visuel/iPhone-test udestår |
 | 4 | iPhone-afprøvning, finpudsning, hosting/PWA, eksport/import og nulstilling | Ikke startet |
 
-Efter fase 2 afprøver Jacob kerneforløbet, inden fase 3 bygges. Teknisk er fase 2 statisk HTML/CSS/JavaScript uden eksterne afhængigheder. Fuld offline-PWA er ikke implementeret endnu.
+Jacob har bedt om fase 3 efter fase 2. Teknisk er fase 2 statisk HTML/CSS/JavaScript uden eksterne afhængigheder. Fuld offline-PWA er ikke implementeret endnu.
 
 ## Tekstprincip — fast krav
 Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tekst skal have en konkret funktion: navigation, handling, status eller nødvendige oplysninger. Minimalisme gælder også sproget.
@@ -48,3 +48,13 @@ Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tek
 - Opgaver uden historik: “Ikke udført endnu”, neutral farve.
 - Indstillinger indeholder valg om tidsestimater og forklaring af statusfarver.
 - Fase 4 inkluderer nulstilling med bekræftelse; skeln mellem historik/rekorder og alle data inklusive egne opgaver. Nulstilling er endnu ikke implementeret.
+
+## Fase 3 — implementeret
+- Ny opgave fra oversigten; rediger/slet på opgavedetaljer. Sletning kræver bekræftelse og omfatter opgavens historik.
+- Nye installationer starter uden eksempelopgaver. Eksisterende lokale opgaver, tider og indstillinger bevares under samme lagernøgle. De kan nu redigeres og slettes individuelt.
+- Registrering uden timer kan dateres i dag eller tidligere. Historik sorteres efter udførelsestidspunkt; seneste udførelse er den nyeste dato, ikke senest indtastede post. Manuel registrering giver aldrig en rekord.
+- Fortryd manuel registrering fjerner kun den registrering. Fortryd målt gennemførelse genåbner timeren pauset.
+- Opgaver med aktiv/pauset timer kan først ændres, slettes eller registreres manuelt, når timeren er afsluttet/afbrudt.
+- Redigering bevarer historik og rekorder. Hvis omfanget ændres væsentligt, kan opgaven oprettes separat for en ny rekordhistorik.
+- Formularer bevares ved appskift. Ugemte ændringer kræver bekræftelse ved Annuller.
+- Regressionstest: node tests/regression.cjs. Testen bruger simuleret DOM/lager; den erstatter ikke browser- eller iPhone-test.
