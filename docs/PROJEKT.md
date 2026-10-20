@@ -36,3 +36,6 @@ AI, login, backend, synkronisering, notifikationer, XP, levels, streaks, statist
 | 4 | iPhone-afprøvning, finpudsning, hosting/PWA og eksport/import | Ikke startet |
 
 Efter fase 2 afprøver Jacob kerneforløbet, inden fase 3 bygges. Teknisk er fase 2 statisk HTML/CSS/JavaScript uden eksterne afhængigheder. Fuld offline-PWA er ikke implementeret endnu.
+
+## Tekstprincip — fast krav
+Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tekst skal have en konkret funktion: navigation, handling, status eller nødvendige oplysninger. Minimalisme gælder også sproget.
