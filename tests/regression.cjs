@@ -9,7 +9,7 @@ const handlers={},app={innerHTML:'',querySelector(){return null;},addEventListen
 const doc={querySelector(s){return s==='#app'?app:s==='#form-error'?error:notice},addEventListener(){}};
 new Function('CleanCore','document','window','localStorage','setInterval','crypto','FormData','confirm','alert',source)(
 core,doc,{addEventListener(){},scrollTo(){}},{getItem(){return saved},setItem(k,v){if(fail)throw Error('quota');saved=v}},()=>0,{randomUUID(){return 'id-'+(++id)}},function(form){return Object.entries(form.values)},()=>confirmed,()=>{});
-return {app,error,notice,submitClick(){handlers.click({target:{closest(){return {type:'submit',dataset:{}}}}})},data(){return saved?JSON.parse(saved):null},fail(v){fail=v},confirm(v){confirmed=v},click(action,task){handlers.click({target:{closest(){return {dataset:task?{task}:{action}}}}})},submit(form,values){handlers.submit({preventDefault(){},target:{id:form,values,reportValidity(){return true}}})}};
+return {app,error,notice,importFile(text){return handlers.change({target:{id:'backup-file',value:'file',files:[{size:text.length,text:async()=>text}]}})},submitClick(){handlers.click({target:{closest(){return {type:'submit',form:{},dataset:{}}}}})},data(){return saved?JSON.parse(saved):null},fail(v){fail=v},confirm(v){confirmed=v},click(action,task){handlers.click({target:{closest(){return {type:'submit',form:null,dataset:task?{task}:{action}}}}})},submit(form,values){handlers.submit({preventDefault(){},target:{id:form,values,reportValidity(){return true}}})}};
 }
 const fields={name:'Køkken',group:'regular',interval:'7',estimate:'12',items:'Vask\nBord'};
 assert.equal(core.taskFields(fields).items.length,2);
@@ -43,4 +43,39 @@ x.fail(false);x.confirm(false);x.click('delete');
 assert.equal(x.data().tasks.length,1);
 x.confirm(true);x.click('delete');assert.equal(x.data().tasks.length,0);
 assert.ok(boot(appSource,core,x.data()).app.innerHTML.includes('Ingen faste opgaver'));
-console.log('CLEAN regression checks passed');
+
+const oldState={tasks:[{id:'bath',name:'Badeværelse',group:'regular',interval:7,estimate:15,items:['Vask'],history:[{id:'h1',at:new Date(2025,0,1).getTime(),duration:12000}]}],session:null,result:null};
+const old=boot(appSource,core,oldState);
+old.click(null,'bath');assert.ok(old.app.innerHTML.includes('Start rengøring'));
+old.click('home');old.click('settings');assert.ok(old.app.innerHTML.includes('Nulstilling'));
+old.click('estimates');assert.equal(old.data().settings.showEstimates,false);
+old.confirm(false);old.click('reset-all');assert.equal(old.data().tasks.length,1);
+old.confirm(true);old.click('reset-history');assert.equal(old.data().tasks.length,1);assert.equal(old.data().tasks[0].history.length,0);
+old.click('settings');old.fail(true);old.click('reset-all');assert.equal(old.data().tasks.length,1);
+old.fail(false);old.click('reset-all');assert.equal(old.data().tasks.length,0);
+const broken=boot(appSource,core,{tasks:'bad'});broken.click('settings');assert.ok(broken.app.innerHTML.includes('Slet alle data'));
+broken.click('reset-all');assert.equal(broken.data().tasks.length,0);
+const backup=core.backup(oldState);
+assert.equal(core.parseBackup(JSON.stringify(backup)).tasks[0].history[0].duration,12000);
+assert.throws(()=>core.parseBackup('{"app":"OTHER","version":1,"data":{}}'));
+assert.throws(()=>core.parseBackup(JSON.stringify({...backup,version:2})));
+assert.throws(()=>core.validateState({...oldState,tasks:[oldState.tasks[0],oldState.tasks[0]]}));
+assert.throws(()=>core.validateState({...oldState,session:{taskId:'missing',accumulated:0,startedAt:null}}));
+const timed={...oldState,session:{taskId:'bath',accumulated:5000,startedAt:1000}};
+const paused=core.backup(timed,11000);
+assert.equal(paused.data.session.startedAt,null);assert.equal(paused.data.session.accumulated,15000);
+assert.equal(timed.session.startedAt,1000);
+assert.equal(core.parseBackup(JSON.stringify(paused)).session.accumulated,15000);
+console.log('CLEAN regression checks passed, including real button defaults, recovery, reset and backup validation.');
+
+
+(async()=>{
+ const target=boot(appSource,core,oldState);
+ target.click('settings');
+ const replacement=core.backup({tasks:[],session:null,result:null});
+ target.confirm(false);await target.importFile(JSON.stringify(replacement));assert.equal(target.data().tasks.length,1);
+ target.confirm(true);await target.importFile('invalid JSON');assert.equal(target.data().tasks.length,1);
+ target.fail(true);await target.importFile(JSON.stringify(replacement));assert.equal(target.data().tasks.length,1);
+ target.fail(false);await target.importFile(JSON.stringify(replacement));assert.equal(target.data().tasks.length,0);
+ console.log('Import cancel, invalid file, storage failure and replacement checks passed.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

@@ -41,3 +41,5 @@ textarea{resize:vertical;line-height:1.6}input[type=date]{appearance:none;min-he
 .optional{font-size:12px;font-weight:400;color:var(--muted);margin-left:5px}
 .danger-button{min-height:48px;border:0;border-radius:12px;color:#b53d36;background:transparent;font-size:14px}
 form .actions{margin-bottom:24px}#form-error:empty{display:none}.history-row{gap:14px}
+
+.settings-panel>.secondary{margin-top:12px}.settings-panel>.danger-button{display:block;width:100%;text-align:left;padding:12px 0}.settings-panel input[hidden]{display:none}

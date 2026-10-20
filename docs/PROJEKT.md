@@ -33,9 +33,9 @@ AI, login, backend, synkronisering, notifikationer, XP, levels, streaks, statist
 | 1 | Design og skærmadfærd | Godkendt |
 | 2 | Eksempelopgaver, overblik, detaljer, timer, resultat og lokal lagring | Implementeret; Jacob har bekræftet, at siden åbner. Fuld iPhone-test udestår |
 | 3 | Egne opgaver, fuld historikadfærd og registrering uden timer | Implementeret; logiktest bestået, visuel/iPhone-test udestår |
-| 4 | iPhone-afprøvning, finpudsning, hosting/PWA, eksport/import og nulstilling | Ikke startet |
+| 4 | iPhone-afprøvning, finpudsning, hosting/PWA, eksport/import og nulstilling | Funktioner implementeret; fysisk iPhone/offline-afprøvning udestår |
 
-Jacob har bedt om fase 3 efter fase 2. Teknisk er fase 2 statisk HTML/CSS/JavaScript uden eksterne afhængigheder. Fuld offline-PWA er ikke implementeret endnu.
+Jacob har bedt om fase 3 efter fase 2. Teknisk er fase 2 statisk HTML/CSS/JavaScript uden eksterne afhængigheder. Offlinefiler, webmanifest og ikoner er nu implementeret.
 
 ## Tekstprincip — fast krav
 Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tekst skal have en konkret funktion: navigation, handling, status eller nødvendige oplysninger. Minimalisme gælder også sproget.
@@ -47,7 +47,7 @@ Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tek
 - Vis tid siden sidste rengøring. Neutral inden intervallet, gul på intervaldagen og dagen efter, rød fra interval + 2 dage. Ved 7 dage: grå 0–6, gul 7–8, rød fra 9.
 - Opgaver uden historik: “Ikke udført endnu”, neutral farve.
 - Indstillinger indeholder valg om tidsestimater og forklaring af statusfarver.
-- Fase 4 inkluderer nulstilling med bekræftelse; skeln mellem historik/rekorder og alle data inklusive egne opgaver. Nulstilling er endnu ikke implementeret.
+- Fase 4 inkluderer nulstilling med bekræftelse; skeln mellem historik/rekorder og alle data inklusive egne opgaver. Nulstilling er implementeret under Indstillinger.
 
 ## Fase 3 — implementeret
 - Ny opgave fra oversigten; rediger/slet på opgavedetaljer. Sletning kræver bekræftelse og omfatter opgavens historik.
@@ -58,3 +58,13 @@ Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tek
 - Redigering bevarer historik og rekorder. Hvis omfanget ændres væsentligt, kan opgaven oprettes separat for en ny rekordhistorik.
 - Formularer bevares ved appskift. Ugemte ændringer kræver bekræftelse ved Annuller.
 - Regressionstest: node tests/regression.cjs. Testen bruger simuleret DOM/lager; den erstatter ikke browser- eller iPhone-test.
+
+## Fase 4 — version 6
+- Rettet knapfejl: browseren gav knapper uden type værdien submit, og appen ignorerede dermed tryk på opgaver. Opgaver og switches har nu eksplicit type=button; kun submit-knapper tilknyttet en formular udelades af navigationshåndteringen.
+- Nulstil historik/rekorder bevarer opgaver og indstillinger. Slet alle data fjerner opgaver, historik, rekorder, indstillinger og timer. Begge kræver bekræftelse. Ingen nulstilling sker automatisk ved opdatering.
+- Backup som JSON med app-id og formatversion. En timer eksporteres pauset uden at ændre den kørende timer. Import validerer hele filen, viser antal opgaver og registreringer og erstatter først efter bekræftelse. Lagringsfejl efterlader eksisterende data intakte.
+- Ugyldige gemte data overskrives ikke automatisk. Indstillinger er tilgængelig til rå eksport, import eller nulstilling.
+- Webmanifest med standalone-visning, PNG-ikoner til hjemmeskærm og Apple touch icon.
+- Service worker henter appfiler ved onlinebesøg og bruger dem offline. Cache er afgrænset til CLEAN; opgavedata ligger fortsat i localStorage. Opdatering af appfiler sletter ikke brugerdata.
+- Regressionstest dækker browserens standardknaptype, eksisterende opgaver, recovery, nulstilling, backupvalidering og import med annullering/lagringsfejl. Testene køres i simuleret DOM, ikke en rigtig browser.
+- Resterende accepttest: Safari på iPhone, tilføjelse til hjemmeskærm, første onlineindlæsning efterfulgt af flytilstand, baggrundstimer, eksport til Filer og import tilbage.

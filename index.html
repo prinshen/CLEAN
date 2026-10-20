@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#F3F2EF">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>CLEAN</title>
-<link rel="stylesheet" href="./style.css?v=5">
-</head>
+<link rel="stylesheet" href="./style.css?v=6">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="CLEAN"></head>
 <body>
 <div id="notice" role="alert"></div>
 <main id="app"><section id="startup" style="padding:32px;font-family:system-ui;color:#24364b"><h1>CLEAN</h1><p id="startup-message">Åbner dine rengøringsopgaver…</p><noscript>JavaScript er slået fra. CLEAN kræver JavaScript for at vise opgaver og timer.</noscript></section></main>
@@ -29,12 +29,12 @@
   });
   setTimeout(function () {
     if (document.getElementById('startup') && !document.getElementById('notice').textContent) {
-      showError('Opstarten blev ikke fuldført. Version 5.');
+      showError('Opstarten blev ikke fuldført. Version 6.');
     }
   }, 10000);
 })();
 </script>
-<script src="./core.js?v=5"></script>
-<script src="./app.js?v=5"></script>
-</body>
+<script src="./core.js?v=6"></script>
+<script src="./app.js?v=6"></script>
+<script src="./pwa.js?v=6"></script></body>
 </html>
