@@ -1,6 +1,6 @@
 'use strict';
-const CACHE='clean-shell-v6';
-const FILES=['./','./index.html','./style.css?v=6','./core.js?v=6','./app.js?v=6','./pwa.js?v=6','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
+const CACHE='clean-shell-v7';
+const FILES=['./','./index.html','./style.css?v=7','./core.js?v=7','./app.js?v=7','./pwa.js?v=7','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('clean-shell-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
