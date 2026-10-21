@@ -43,3 +43,8 @@ textarea{resize:vertical;line-height:1.6}input[type=date]{appearance:none;min-he
 form .actions{margin-bottom:24px}#form-error:empty{display:none}.history-row{gap:14px}
 
 .settings-panel>.secondary{margin-top:12px}.settings-panel>.danger-button{display:block;width:100%;text-align:left;padding:12px 0}.settings-panel input[hidden]{display:none}
+
+/* Next cleaning date on the right; estimate beneath the task name. */
+.task-copy .estimate{display:block;margin-top:7px;font-size:12px;line-height:1.45;color:var(--muted)}
+.task-end{max-width:36%;text-align:right}.task-end .status{margin:0;overflow-wrap:anywhere}.row-name{overflow-wrap:anywhere}
+.detail-start{margin:20px 0}
