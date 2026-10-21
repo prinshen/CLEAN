@@ -1,5 +1,5 @@
 # CLEAN — projektgrundlag
-Opdateret 20. oktober 2026.
+Opdateret 21. oktober 2026.
 
 ## Formål
 Personlig rengøringsapp til iPhone via GitHub-hostet webapp/PWA. Dansk brugerflade. Én opgave ad gangen; tidsestimat og rekord hjælper med at komme i gang.
@@ -9,7 +9,7 @@ Personlig rengøringsapp til iPhone via GitHub-hostet webapp/PWA. Dansk brugerfl
 - To manuelt valgte grupper: faste opgaver og sjældne opgaver. Gruppens valg er uafhængigt af intervallet.
 - Faste opgaver altid synlige; sjældne opgaver foldes ud. Den lukkede gruppe viser antal opgaver og antal farvemarkerede opgaver.
 - Opgaver prioriteres efter næste rengøringsdato.
-- Seneste udførelse, antal dage siden, historik, personlig rekord og næste dato. Ingen deadline- eller forsinkelsestekst.
+- Næste rengøring i oversigten; seneste udførelse, historik og personlig rekord i opgavedetaljer.
 - Underopgaver er en synlig huskeliste uden afkrydsning, også på timerskærmen.
 - Dedikeret timer med start, pause, fortsæt og afslut. Korrekt tid ved låsning, appskift og genåbning.
 - Én aktiv timer. Adgang tilbage til den fra overblikket.
@@ -44,7 +44,9 @@ Ingen slogans, catchphrases, motivationsfraser eller dekorativ fyldtekst. Al tek
 - Opgaver er startskærmen. Ingen bundmenu. Diskret Indstillinger-knap nederst på oversigten.
 - Ingen dato i toppen, slogans eller tekniske fasebeskeder på overblikket.
 - Kompakte grupperede opgaverækker med tydelige trykflader og grå/mørkeblå farver.
-- Vis tid siden sidste rengøring. Neutral inden intervallet, gul på intervaldagen og dagen efter, rød fra interval + 2 dage. Ved 7 dage: grå 0–6, gul 7–8, rød fra 9.
+- Vis tid til næste rengøring til højre: “Om 4 dage”, “I dag” eller “3 dage over”. Neutral inden intervallet, gul på intervaldagen og to dage efter, rød ved mere end to dages overskridelse. Ved 7 dage: grå 0–6, gul 7–9, rød fra 10.
+- Forventet tid står under opgavenavnet i oversigten og følger indstillingen for tidsestimater.
+- Start rengøring står øverst under opgavenavnet i detaljevisningen. Registrer uden timer bliver nederst.
 - Opgaver uden historik: “Ikke udført endnu”, neutral farve.
 - Indstillinger indeholder valg om tidsestimater og forklaring af statusfarver.
 - Fase 4 inkluderer nulstilling med bekræftelse; skeln mellem historik/rekorder og alle data inklusive egne opgaver. Nulstilling er implementeret under Indstillinger.
